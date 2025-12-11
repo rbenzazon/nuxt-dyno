@@ -1,5 +1,8 @@
 <template>
-    <span>{{ power }} {{ unit }}</span>
+    <div>
+        <span>Power:</span>
+        <span>{{ power }} {{ unit }}</span>
+    </div>
 </template>
 
 <script setup>
@@ -18,8 +21,20 @@
 </script>
 
 <style scoped>
-span {
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+span{
     font-weight: bold;
+    font-size: 20px;
     color: #333;
+}
+span:not(:first-child) {
+    font-size: 40px;
 }
 </style>

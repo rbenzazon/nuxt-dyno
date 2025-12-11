@@ -1,6 +1,7 @@
 <template>
+    <Needle :angle="45"/>
     <svg ref="svgRef" width="200" height="200"></svg>
-    <span>{{ rpm }} rpm</span>
+    <span>{{ rpm }}</span>
 </template>
 
 <script setup>
@@ -38,6 +39,8 @@
             default: 9000
         }
     });
+
+    
 
     const svgRef = useTemplateRef("svgRef");
     const gRef = ref(null);
@@ -179,8 +182,17 @@
 </script>
 
 <style scoped>
+    #needle{
+        position:absolute;
+        transform: translate(21px, 7px);
+    }
 span {
     font-weight: bold;
+    font-size: 22px;
     color: #333;
+    position: absolute;
+    left: 250px;
+    top: 308px;
+
 }
 </style>

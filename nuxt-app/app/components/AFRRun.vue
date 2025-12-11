@@ -1,5 +1,8 @@
 <template>
-    <span>{{ afr }}</span>
+    <div>
+        <span>AFR:</span>
+        <span>{{ afr }}</span>
+    </div>
 </template>
 
 <script setup>
@@ -14,9 +17,22 @@
 </script>
 
 <style scoped>
-span {
+div {
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+span{
     font-weight: bold;
+    font-size: 20px;
     color: #333;
+}
+span:not(:first-child) {
+    font-size: 40px;
 }
 
 </style>
