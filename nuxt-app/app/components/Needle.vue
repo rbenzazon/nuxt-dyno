@@ -1,26 +1,14 @@
 <template>
-    <svg
-   width="200"
-   height="200"
-   viewBox="0 0 52.916665 52.916666"
-   version="1.1"
-   id="needle"
-   xml:space="preserve"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
-     id="defs1" /><g
-     id="layer1"><g
-       id="g12"
-       :transform="`translate(-79.179757,-122.94095)  rotate(${props.angle},105.2367,141.64205)`"><path
-         id="path2"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.051;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
-         d="m 105.23647,141.6451 -0.002,5.24257 c -1.23613,0.20346 -2.15617,1.27319 -2.158,2.52595 0.002,1.2516 0.92279,2.3209 2.15748,2.52595 l 0.13958,5.09529 0.67179,-0.002 0.14211,-5.09581 c 1.18764,-0.24539 2.00946,-1.31064 2.01228,-2.52336 -0.003,-1.20123 -0.83465,-2.27293 -2.00815,-2.52957 l 0.001,-5.24102 z" /><path
-         style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.051;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000;stop-opacity:1"
-         d="m 105.2367,141.64205 0.95477,-8.7e-4 0.001,-2.57792 c 0.34393,-0.14721 0.44292,-0.41827 0.44139,-0.74016 l -0.17294,-10.65288 c -0.008,-0.30574 -0.38937,-0.80652 -0.72144,-1.15424 -0.30341,0.32251 -0.7443,0.82669 -0.74651,1.14876 l -0.17504,10.66108 c -0.0125,0.3878 0.16094,0.60037 0.41639,0.73572 z"
-         id="path4" /><path
-         style="fill:#8f8f8f;fill-opacity:1;stroke:none;stroke-width:0.0244644;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
-         d="m 105.96527,138.00888 -0.0456,-10.04642 c -0.003,-0.26658 -0.0806,-0.39373 -0.19038,-0.61945 -0.11933,0.22566 -0.19641,0.33384 -0.197,0.61467 l -0.0462,10.05357 c -8e-5,0.2709 0.13579,0.31517 0.23952,0.31518 0.10374,2e-5 0.24007,-0.0369 0.23966,-0.31755 z"
-         id="path4-3" /></g></g></svg>
+    <svg id="needle" width="200" height="200" version="1.1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <g id="layer1">
+            <g id="g14" :transform="`rotate(${props.angle*180/Math.PI},100,100)`">
+                <path id="path2" d="m98.36902 73.45847-0.0068 17.93594-0.0018 17.28361 0.477533 17.43207 2.298335-7e-3 0.48619-17.43385 0.0141-17.28714 3e-3 -17.93064z" style="paint-order:markers fill stroke"/>
+                <path id="path4" d="m98.37063 73.44803 3.262568-3e-3 -0.0361-8.819609c1.17666-0.503636 1.51532-1.43099 1.51009-2.532244l-0.59166-36.44575c-0.0274-1.046001-1.37509-2.759276-2.51117-3.948899-1.038039 1.103375-2.503448 2.828281-2.511008 3.93015l-0.598429 36.47383c-0.04277 1.326746 0.55061 2.053993 1.424558 2.517054z" fill="#fff" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal;paint-order:markers fill stroke"/>
+                <path id="path4-3" d="m100.8197 61.01819-0.156-34.37093c-0.0103-0.912027-0.27575-1.347034-0.65134-2.11927-0.408253 0.772031-0.67196 1.142137-0.673979 2.102916l-0.15806 34.39539c-2.73e-4 0.926807 0.464567 1.078264 0.819444 1.078298 0.354925 6.8e-5 0.821345-0.126243 0.819935-1.086406z" fill="#8f8f8f" style="paint-order:markers fill stroke"/>
+                <circle id="path14" cx="100" cy="100" r="9" style="-inkscape-stroke:none;font-variation-settings:normal;paint-order:markers fill stroke"/>
+            </g>
+        </g>
+    </svg>
 </template>
 
 <script setup>
@@ -31,4 +19,6 @@
             default: 0
         }
     });
+    console.log("props.angle",props.angle);
+    
 </script>

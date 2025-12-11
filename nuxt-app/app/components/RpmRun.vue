@@ -1,5 +1,5 @@
 <template>
-    <Needle :angle="45"/>
+    <Needle :angle="angle"/>
     <svg ref="svgRef" width="200" height="200"></svg>
     <span>{{ rpm }}</span>
 </template>
@@ -39,8 +39,11 @@
             default: 9000
         }
     });
+    const startAngle = Math.PI;
+    const endAngle = 2.5 * Math.PI;
+    const majorAngle =  (endAngle - startAngle)/(props.max / 1000);
 
-    
+    const angle = computed(() => props.rpm/props.max * (endAngle - startAngle) - Math.PI);
 
     const svgRef = useTemplateRef("svgRef");
     const gRef = ref(null);
@@ -52,8 +55,7 @@
         const width = svg.attr("width");
         const height = svg.attr("height");
         const radius = Math.min(width, height) / 2 - 10;
-        const startAngle = Math.PI;
-        const endAngle = 2.5 * Math.PI;
+        
         const majorGraduations = new Array(props.max / 1000 +1).fill(0).map((_, i) => i );
         
 
@@ -93,10 +95,7 @@
             .attr("d", redArc);
 
         majorGraduations.forEach((graduation,index) => {
-            const majorAngle =  (endAngle - startAngle)/(props.max / 1000);
             const angle = startAngle + graduation * majorAngle - Math.PI/2;
-            console.log("d", graduation);
-            console.log("angle", angle);
             const x1 = (radius - 10) * Math.cos(angle);
             const y1 = (radius - 10) * Math.sin(angle);
             const x2 = radius * Math.cos(angle);
@@ -160,13 +159,13 @@
     }
     // Update the dial with new RPM values
     const updateDial = (rpm) => {
-        const angle = (rpm - props.min) / (props.max - props.min) * 2 * Math.PI;
+        /*const angle = (rpm - props.min) / (props.max - props.min) * 2 * Math.PI;
         console.log("Updating dial to angle:", angle);
         gRef.value.select("path")
             .datum({ endAngle: angle })
             .transition()
             .duration(750)
-            .attr("d", arc);
+            .attr("d", arc);*/
     };
 
     onMounted(() => {
@@ -184,7 +183,10 @@
 <style scoped>
     #needle{
         position:absolute;
-        transform: translate(21px, 7px);
+        /* drop shadow */
+        filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+
+        
     }
 span {
     font-weight: bold;
