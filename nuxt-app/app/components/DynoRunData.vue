@@ -1,7 +1,7 @@
 <template>
 	<div class="run-data-layout">
 		<div class="run-item">
-			<RpmRun :rpm="3500" />
+			<RpmRun :rpm="rpm" />
 		</div>
 		<div class="run-item">
 			<PowerRun :power="100" />
@@ -11,6 +11,22 @@
 		</div>
 	</div>
 </template>
+<script setup>
+import { ref, watch } from 'vue';
+
+const rpm = ref(0);
+
+const dynoState = useDynoStateStore();
+
+watch(
+	() => dynoState.state?.rpm,
+	(val) => {
+		if (typeof val === 'number') {
+			rpm.value = val;
+		}
+	},
+);
+</script>
 <style scoped>
 .run-data-layout {
 	/*grid*/

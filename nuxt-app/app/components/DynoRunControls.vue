@@ -1,6 +1,7 @@
 <template>
 	<button @click="toggleCapture" :class="{ capturing: isRunning }">{{ buttonText }}</button>
 	<DynoSwitch v-model:value="started" label="Engine Started" />
+	<DynoSlider v-model:value="throttle" label="Throttle" />
 </template>
 
 <script setup>
@@ -11,6 +12,7 @@ const stopText = 'Stop Capture';
 const isRunning = ref(false);
 const buttonText = computed(() => (isRunning.value ? stopText : startText));
 const started = ref(false);
+const throttle = ref(0);
 
 const dynoState = useDynoStateStore();
 
@@ -25,6 +27,19 @@ watch(
 	(val) => {
 		if (typeof val === 'boolean' && val !== started.value) {
 			started.value = val;
+		}
+	},
+);
+
+watch(throttle, (val) => {
+	dynoState.update({ ...dynoState.state, throttlePosPerc: val });
+});
+
+watch(
+	() => dynoState.state?.throttlePosPerc,
+	(val) => {
+		if (typeof val === 'number' && val !== throttle.value) {
+			throttle.value = val;
 		}
 	},
 );
