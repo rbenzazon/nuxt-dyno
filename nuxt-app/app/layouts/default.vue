@@ -14,12 +14,12 @@
 }
 
 /* Target header element inside the Header child component */
-::v-deep header {
+:deep(header) {
     padding: 1rem;
 }
 
 /* Target footer element inside the Footer child component */
-::v-deep footer {
+:deep(footer) {
     padding: 1rem;
     margin-top: auto;
 }
