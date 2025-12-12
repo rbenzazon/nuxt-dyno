@@ -1,3 +1,3 @@
 <template>
-  <DynoRun />
+	<DynoRun />
 </template>

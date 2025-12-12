@@ -2,37 +2,39 @@
 add the font ./vipnagorgialla.italic.otf
 */
 @font-face {
-    font-family: 'Vipnagorgialla';
-    src: url('./vipnagorgialla.italic.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
+	font-family: 'Vipnagorgialla';
+	src: url('./vipnagorgialla.italic.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
 }
 
-svg text { user-select: none; }
+svg text {
+	user-select: none;
+}
 
 /*basic reset*/
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 body {
-    font-family: 'Vipnagorgialla', sans-serif;
-    background-color: var(--content-bg-color);
-    color: var(--text-color);
+	font-family: 'Vipnagorgialla', sans-serif;
+	background-color: var(--content-bg-color);
+	color: var(--text-color);
 }
 /*
 dark theme variables
 */
 :root {
-    --bg-color: #121212;
-    --content-bg-color: #2a2a2a;
-    --text-color: #ffffff;
-    --primary-color: #1e88e5;
-    --secondary-color: #c2185b;
-    --accent-color: #ff4081;
-    --error-color: #f44336;
-    --warning-color: #ff9800;
-    --info-color: #2196f3;
-    --success-color: #4caf50;
+	--bg-color: #121212;
+	--content-bg-color: #2a2a2a;
+	--text-color: #ffffff;
+	--primary-color: #1e88e5;
+	--secondary-color: #c2185b;
+	--accent-color: #ff4081;
+	--error-color: #f44336;
+	--warning-color: #ff9800;
+	--info-color: #2196f3;
+	--success-color: #4caf50;
 }
