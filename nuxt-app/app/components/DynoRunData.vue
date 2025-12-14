@@ -16,10 +16,10 @@ import { ref, watch } from 'vue';
 
 const rpm = ref(0);
 
-const dynoState = useDynoStateStore();
+const engineState = useEngineStateStore();
 
 watch(
-	() => dynoState.state?.rpm,
+	() => engineState.state?.rpm,
 	(val) => {
 		if (typeof val === 'number') {
 			rpm.value = val;

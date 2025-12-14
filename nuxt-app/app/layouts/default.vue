@@ -1,8 +1,8 @@
 <template>
 	<div class="layout-default">
-		<Header />
+		<DynoHeader />
 		<slot />
-		<Footer />
+		<DynoFooter />
 	</div>
 </template>
 

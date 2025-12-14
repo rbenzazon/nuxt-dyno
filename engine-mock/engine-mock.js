@@ -25,8 +25,9 @@ function connectWebSocket() {
     try {
       const msg = JSON.parse(data);
       if (msg.type === 'state' && msg.data) {
-        if (typeof msg.data.started === 'boolean') started = msg.data.started;
-        if (typeof msg.data.throttlePosPerc === 'number') throttlePosPerc = msg.data.throttlePosPerc;
+        const engineState = msg.data.engineState;
+        if (typeof engineState.started === 'boolean') started = engineState.started;
+        if (typeof engineState.throttlePosPerc === 'number') throttlePosPerc = engineState.throttlePosPerc;
       }
     } catch (e) {
       console.error('Error parsing ws message:', e);
@@ -60,7 +61,7 @@ setInterval(() => {
   console.log(`Engine state - Started: ${started}, Throttle: ${throttlePosPerc}%, RPM: ${Math.round(rpm)}`);
   // Send update to Nuxt app
   if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ type: 'update', data: { rpm: Math.round(rpm) } }));
+    ws.send(JSON.stringify({ type: 'update-engine', data: { rpm: Math.round(rpm) } }));
   }
 }, 100);
 

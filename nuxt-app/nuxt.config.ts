@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	modules: [
-		// pinia plugin
 		'@pinia/nuxt',
+		'@nuxt/eslint',
 	],
 
 	imports: {
@@ -16,4 +16,5 @@ export default defineNuxtConfig({
 			websocket: true,
 		},
 	},
+	debug: true,
 });

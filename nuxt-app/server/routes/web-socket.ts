@@ -1,23 +1,29 @@
+import EngineState from '~~/server/engine-state';
 import DynoState from '~~/server/dyno-state';
+
+import { UPDATE_DYNO, UPDATE_ENGINE } from '~~/shared/app-state';
 
 let dirty = true;
 const rps = 30;
 const refreshRate = 1000 / rps;
 const peers = new Set<any>();
+const engineState = EngineState.getInstance();
 const dynoState = DynoState.getInstance();
 
 const webSocket = defineWebSocketHandler({
 	open(peer) {
 		peers.add(peer);
 		console.log('[ws] open');
-		peer.send(JSON.stringify({ type: 'state', data: dynoState }));
+		peer.send(JSON.stringify({ type: 'state', data: { engineState, dynoState } }));
 	},
 
 	async message(peer, message) {
 		try {
 			const msg: any = await message.json();
-			if (msg.type === 'update' && msg.data) {
-				console.log('[ws] message', msg.data.rpm);
+			if (msg.type === UPDATE_ENGINE && msg.data) {
+				Object.assign(engineState, msg.data);
+				dirty = true;
+			} else if (msg.type === UPDATE_DYNO && msg.data) {
 				Object.assign(dynoState, msg.data);
 				dirty = true;
 			}
@@ -38,10 +44,8 @@ const webSocket = defineWebSocketHandler({
 console.log('WebSocket handler initialized');
 setInterval(() => {
 	if (dirty) {
-		//console.log("broadcasting updated dynoState to peers");
-		const dynoState = DynoState.getInstance();
 		peers.forEach((peer) => {
-			peer.send(JSON.stringify({ type: 'state', data: dynoState }));
+			peer.send(JSON.stringify({ type: 'state', data: { engineState, dynoState } }));
 		});
 		dirty = false;
 	}

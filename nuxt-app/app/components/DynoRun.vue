@@ -3,13 +3,8 @@
 		<h1>Dyno run</h1>
 		<DynoRunData />
 		<DynoRunControls />
-		{{ dynoStateStore.state }}
 	</main>
 </template>
-<script setup>
-const dynoStateStore = useDynoStateStore();
-console.log('DynoRun.vue dynoStateStore:', dynoStateStore.state);
-</script>
 
 <style scoped>
 h1 {

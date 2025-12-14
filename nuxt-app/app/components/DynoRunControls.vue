@@ -1,5 +1,5 @@
 <template>
-	<button @click="toggleCapture" :class="{ capturing: isRunning }">{{ buttonText }}</button>
+	<button :class="{ capturing: isRunning }" @click="toggleCapture">{{ buttonText }}</button>
 	<DynoSwitch v-model:value="started" label="Engine Started" />
 	<DynoSlider v-model:value="throttle" label="Throttle" />
 </template>
@@ -14,16 +14,16 @@ const buttonText = computed(() => (isRunning.value ? stopText : startText));
 const started = ref(false);
 const throttle = ref(0);
 
-const dynoState = useDynoStateStore();
+const engineState = useEngineStateStore();
 
 // Sync started -> store
 watch(started, (val) => {
-	dynoState.update({ ...dynoState.state, started: val });
+	engineState.update({ ...engineState.state, started: val });
 });
 
 // Sync store -> started (for remote/server updates)
 watch(
-	() => dynoState.state?.started,
+	() => engineState.state?.started,
 	(val) => {
 		if (typeof val === 'boolean' && val !== started.value) {
 			started.value = val;
@@ -32,11 +32,11 @@ watch(
 );
 
 watch(throttle, (val) => {
-	dynoState.update({ ...dynoState.state, throttlePosPerc: val });
+	engineState.update({ ...engineState.state, throttlePosPerc: val });
 });
 
 watch(
-	() => dynoState.state?.throttlePosPerc,
+	() => engineState.state?.throttlePosPerc,
 	(val) => {
 		if (typeof val === 'number' && val !== throttle.value) {
 			throttle.value = val;

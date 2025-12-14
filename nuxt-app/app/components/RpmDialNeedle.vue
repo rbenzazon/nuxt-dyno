@@ -40,5 +40,4 @@ const props = defineProps({
 		default: 0,
 	},
 });
-console.log('props.angle', props.angle);
 </script>

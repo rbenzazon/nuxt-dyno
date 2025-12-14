@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import { UPDATE_DYNO } from '~~/shared/app-state';
+import { UPDATE_ENGINE } from '~~/shared/app-state';
 
-export const useDynoStateStore = defineStore('dynoState', () => {
+export const useEngineStateStore = defineStore('engineState', () => {
 	const state = ref(null);
 	let updatingFromWs = false;
 	let ws: WebSocket | null = null;
@@ -15,7 +15,7 @@ export const useDynoStateStore = defineStore('dynoState', () => {
 			Object.assign(state.value, newValue);
 		}
 		if (!updatingFromWs && ws && ws.readyState === WebSocket.OPEN) {
-			ws.send(JSON.stringify({ type: UPDATE_DYNO, data: newValue }));
+			ws.send(JSON.stringify({ type: UPDATE_ENGINE, data: newValue }));
 		}
 	}
 
@@ -29,7 +29,7 @@ export const useDynoStateStore = defineStore('dynoState', () => {
 			const msg = JSON.parse(event.data);
 			if (msg.type === 'state' && msg.data) {
 				updatingFromWs = true;
-				update(msg.data.dynoState);
+				update(msg.data.engineState);
 				updatingFromWs = false;
 			}
 		};

@@ -1,6 +1,6 @@
 <template>
-	<Needle :angle="angle" />
-	<svg ref="svgRef" width="200" height="200"></svg>
+	<RpmDialNeedle :angle="angle" />
+	<svg ref="svgRef" width="200" height="200" />
 	<span>{{ rpm }}</span>
 </template>
 
@@ -11,7 +11,6 @@ const props = defineProps({
 	rpm: {
 		type: Number,
 		required: true,
-		default: 0,
 	},
 	unit: {
 		type: String,
@@ -49,7 +48,7 @@ const svgRef = useTemplateRef('svgRef');
 const gRef = ref(null);
 let arc;
 
-function createDial(min, max) {
+function createDial() {
 	//create a rpm dial using d3
 	const svg = d3.select(svgRef.value);
 	const width = svg.attr('width');
@@ -155,6 +154,8 @@ function createDial(min, max) {
 }
 // Update the dial with new RPM values
 const updateDial = (rpm) => {
+	console.log(rpm);
+
 	/*const angle = (rpm - props.min) / (props.max - props.min) * 2 * Math.PI;
         console.log("Updating dial to angle:", angle);
         gRef.value.select("path")
@@ -165,7 +166,7 @@ const updateDial = (rpm) => {
 };
 
 onMounted(() => {
-	createDial(props.min, props.max);
+	createDial();
 	updateDial(props.rpm);
 	// react to prop changes
 	watch(

@@ -10,7 +10,6 @@ defineProps({
 	power: {
 		type: Number,
 		required: true,
-		default: 100,
 	},
 	unit: {
 		type: String,

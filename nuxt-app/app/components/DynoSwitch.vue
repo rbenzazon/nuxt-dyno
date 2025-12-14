@@ -2,8 +2,8 @@
 	<div>
 		<label>{{ label }}</label>
 		<label class="switch">
-			<input type="checkbox" v-model="isOn" @change="emitChange" />
-			<span class="slider"></span>
+			<input v-model="isOn" type="checkbox" @change="emitChange" />
+			<span class="slider" />
 		</label>
 	</div>
 </template>
@@ -12,7 +12,6 @@ const props = defineProps({
 	value: {
 		type: Boolean,
 		required: true,
-		default: false,
 	},
 	label: {
 		type: String,

@@ -1,7 +1,7 @@
 <template>
 	<div class="dyno-slider">
 		<label>{{ label }}</label>
-		<input type="range" :min="min" :max="max" :step="step" v-model="localValue" @input="onInput" />
+		<input v-model="localValue" type="range" :min="min" :max="max" :step="step" @input="onInput" />
 		<span>{{ value }}</span>
 	</div>
 </template>
@@ -10,7 +10,6 @@ const props = defineProps({
 	value: {
 		type: Number,
 		required: true,
-		default: 0,
 	},
 	min: {
 		type: Number,
