@@ -1,7 +1,7 @@
 import EngineState from '~~/server/engine-state';
 import DynoState from '~~/server/dyno-state';
-
 import { UPDATE_DYNO, UPDATE_ENGINE } from '~~/shared/app-state';
+import { partialEqual } from '~~/shared/utils/equal';
 
 let dirty = true;
 const rps = 30;
@@ -20,10 +20,10 @@ const webSocket = defineWebSocketHandler({
 	async message(peer, message) {
 		try {
 			const msg: any = await message.json();
-			if (msg.type === UPDATE_ENGINE && msg.data) {
+			if (msg.type === UPDATE_ENGINE && msg.data && !partialEqual(msg.data, engineState)) {
 				Object.assign(engineState, msg.data);
 				dirty = true;
-			} else if (msg.type === UPDATE_DYNO && msg.data) {
+			} else if (msg.type === UPDATE_DYNO && msg.data && !partialEqual(msg.data, dynoState)) {
 				Object.assign(dynoState, msg.data);
 				dirty = true;
 			}

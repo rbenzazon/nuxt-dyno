@@ -154,7 +154,6 @@ function createDial() {
 }
 // Update the dial with new RPM values
 const updateDial = (rpm) => {
-	console.log(rpm);
 
 	/*const angle = (rpm - props.min) / (props.max - props.min) * 2 * Math.PI;
         console.log("Updating dial to angle:", angle);

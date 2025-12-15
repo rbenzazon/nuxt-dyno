@@ -5,11 +5,14 @@
 		<DynoSwitch v-model:value="started" label="Engine Started" />
 		<DynoSlider v-model:value="throttle" label="Throttle" />
 		<DynoSwitch v-model:value="isFanOn" label="Fan" />
+		<DynoSlider v-model:value="load" :max="maxLoadlbft" label="Load lb-ft" />
 	</div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { maxLoadlbft } from '~~/shared/dyno';
+
 
 const startText = 'Start Capture';
 const stopText = 'Stop Capture';
@@ -18,68 +21,52 @@ const buttonText = computed(() => (isRunning.value ? stopText : startText));
 const started = ref(false);
 const throttle = ref(0);
 const isFanOn = ref(false);
+const load = ref(0);
 
 const engineState = useEngineStateStore();
 const dynoState = useDynoStateStore();
 
-// Sync started -> store
-watch(started, (val) => {
-	engineState.update({ ...engineState.state, started: val });
-});
+const debounceMap = new Map();
 
-// Sync store -> started (for remote/server updates)
-watch(
-	() => engineState.state?.started,
-	(val) => {
-		if (typeof val === 'boolean' && val !== started.value) {
-			started.value = val;
-		}
-	},
-);
+function debounceLocalUpdate(store,localRef,val) {
+	if(debounceMap.has(store)){
+		clearTimeout(debounceMap.get(store));
+	}else{
+		const timeoutId = setTimeout(() => {
+			if (val !== undefined && val !== localRef.value) {
+				localRef.value = val;
+			}
+			debounceMap.delete(store);
+		}, 100);
+		debounceMap.set(store, timeoutId);
+	}
+}
 
-watch(throttle, (val) => {
-	engineState.update({ ...engineState.state, throttlePosPerc: val });
-});
-
-watch(
-	() => engineState.state?.throttlePosPerc,
-	(val) => {
-		if (typeof val === 'number' && val !== throttle.value) {
-			throttle.value = val;
-		}
-	},
-);
-
-watch(isFanOn, (val) => {
-	dynoState.update({ ...dynoState.state, isFanOn: val });
-});
-
-watch(
-	() => dynoState.state?.isFanOn,
-	(val) => {
-		if (typeof val === 'boolean' && val !== isFanOn.value) {
-			isFanOn.value = val;
-		}
-	},
-);
+function syncRefWithStore(localRef, store, storeKey) {
+  // Local -> Store
+  watch(localRef, (val) => {
+    store.update({ [storeKey]: val });
+  });
+  // Store -> Local
+  watch(
+    () => store.state?.[storeKey],
+    (val) => {
+      debounceLocalUpdate(store, localRef, val);
+    }
+  );
+}
 
 const toggleCapture = () => {
 	isRunning.value = !isRunning.value;
 	console.log(isRunning.value ? 'Capture started' : 'Capture stopped');
 };
 
-watch(isRunning, (val) => {
-	dynoState.update({ ...dynoState.state, isCapturing: val });
-});
+syncRefWithStore(started, engineState, 'started');
+syncRefWithStore(throttle, engineState, 'throttlePosPerc');
+syncRefWithStore(isFanOn, dynoState, 'isFanOn');
+syncRefWithStore(isRunning, dynoState, 'isCapturing');
+syncRefWithStore(load, dynoState, 'loadlbft');
 
-watch(
-	() => dynoState.state?.isCapturing,
-	(val) => {
-		if (typeof val === 'boolean' && val !== isRunning.value) {
-			isRunning.value = val;
-		}
-	},
-);
 </script>
 
 <style scoped>

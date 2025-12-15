@@ -37,10 +37,10 @@ const emit = defineEmits(['update:value']);
 
 const localValue = computed({
 	get() {
-		return props.value;
+		return Number(props.value);
 	},
 	set(value) {
-		emit('update:value', value);
+		emit('update:value', Number(value));
 	},
 });
 

@@ -63,7 +63,7 @@ setInterval(() => {
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'update-engine', data: { rpm: Math.round(rpm) } }));
   }
-}, 100);
+}, 30);// per second : 
 
 // Optionally, expose a simple HTTP endpoint for health/debug
 app.get('/', (req, res) => {

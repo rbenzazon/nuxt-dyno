@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 import { UPDATE_ENGINE } from '~~/shared/app-state';
+import { shallowEqual } from '~~/shared/utils/equal';
 
 export const useEngineStateStore = defineStore('engineState', () => {
 	const state = ref(null);
@@ -27,7 +28,7 @@ export const useEngineStateStore = defineStore('engineState', () => {
 		};
 		ws.onmessage = (event) => {
 			const msg = JSON.parse(event.data);
-			if (msg.type === 'state' && msg.data) {
+			if (msg.type === 'state' && msg.data && !shallowEqual(msg.data?.engineState, state.value)) {
 				updatingFromWs = true;
 				update(msg.data.engineState);
 				updatingFromWs = false;
