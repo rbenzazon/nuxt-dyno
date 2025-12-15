@@ -1,7 +1,11 @@
 <template>
-	<button :class="{ capturing: isRunning }" @click="toggleCapture">{{ buttonText }}</button>
-	<DynoSwitch v-model:value="started" label="Engine Started" />
-	<DynoSlider v-model:value="throttle" label="Throttle" />
+	<h2>Controls</h2>
+	<div class="layout">
+		<button :class="{ capturing: isRunning, item: true }" @click="toggleCapture">{{ buttonText }}</button>
+		<DynoSwitch v-model:value="started" label="Engine Started" />
+		<DynoSlider v-model:value="throttle" label="Throttle" />
+		<DynoSwitch v-model:value="isFanOn" label="Fan" />
+	</div>
 </template>
 
 <script setup>
@@ -13,8 +17,10 @@ const isRunning = ref(false);
 const buttonText = computed(() => (isRunning.value ? stopText : startText));
 const started = ref(false);
 const throttle = ref(0);
+const isFanOn = ref(false);
 
 const engineState = useEngineStateStore();
+const dynoState = useDynoStateStore();
 
 // Sync started -> store
 watch(started, (val) => {
@@ -44,10 +50,36 @@ watch(
 	},
 );
 
+watch(isFanOn, (val) => {
+	dynoState.update({ ...dynoState.state, isFanOn: val });
+});
+
+watch(
+	() => dynoState.state?.isFanOn,
+	(val) => {
+		if (typeof val === 'boolean' && val !== isFanOn.value) {
+			isFanOn.value = val;
+		}
+	},
+);
+
 const toggleCapture = () => {
 	isRunning.value = !isRunning.value;
 	console.log(isRunning.value ? 'Capture started' : 'Capture stopped');
 };
+
+watch(isRunning, (val) => {
+	dynoState.update({ ...dynoState.state, isCapturing: val });
+});
+
+watch(
+	() => dynoState.state?.isCapturing,
+	(val) => {
+		if (typeof val === 'boolean' && val !== isRunning.value) {
+			isRunning.value = val;
+		}
+	},
+);
 </script>
 
 <style scoped>
@@ -64,5 +96,24 @@ button {
 .capturing {
 	/* red */
 	background-color: var(--error-color);
+}
+.layout {
+	/*grid*/
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 1rem;
+	margin: 1rem;
+}
+:deep(.container) {
+	padding: 1rem;
+	border-radius: 8px;
+	text-align: center;
+	background-color: #f0f0f0;
+}
+:deep(.container span) {
+	color: var(--secondary-color);
+}
+:deep(.container label) {
+	color: var(--secondary-color);
 }
 </style>

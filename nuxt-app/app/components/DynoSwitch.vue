@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="container">
 		<label>{{ label }}</label>
 		<label class="switch">
 			<input v-model="isOn" type="checkbox" @change="emitChange" />

@@ -1,12 +1,13 @@
 <template>
-	<div class="run-data-layout">
-		<div class="run-item">
+	<h2>Engine data</h2>
+	<div class="layout">
+		<div class="item">
 			<RpmRun :rpm="rpm" />
 		</div>
-		<div class="run-item">
+		<div class="item">
 			<PowerRun :power="100" />
 		</div>
-		<div class="run-item">
+		<div class="item">
 			<AFRRun :afr="13.2" />
 		</div>
 	</div>
@@ -28,17 +29,20 @@ watch(
 );
 </script>
 <style scoped>
-.run-data-layout {
+.layout {
 	/*grid*/
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	gap: 1rem;
 	margin: 1rem;
 }
-.run-item {
+.item {
 	background-color: #f0f0f0;
 	padding: 1rem;
 	border-radius: 8px;
 	text-align: center;
+}
+:deep(.item span) {
+	color: var(--secondary-color);
 }
 </style>

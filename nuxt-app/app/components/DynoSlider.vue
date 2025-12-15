@@ -1,5 +1,5 @@
 <template>
-	<div class="dyno-slider">
+	<div class="container">
 		<label>{{ label }}</label>
 		<input v-model="localValue" type="range" :min="min" :max="max" :step="step" @input="onInput" />
 		<span>{{ value }}</span>
@@ -50,13 +50,13 @@ function onInput(event) {
 }
 </script>
 <style scoped>
-.dyno-slider {
+.container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
 }
-.dyno-slider input[type='range'] {
+.container input[type='range'] {
 	width: 80%;
 	margin: 10px 0;
 }
@@ -68,7 +68,7 @@ label {
 	font-size: 1em;
 	margin-bottom: 5px;
 }
-span {
+/*span {
 	color: var(--text-color);
-}
+}*/
 </style>

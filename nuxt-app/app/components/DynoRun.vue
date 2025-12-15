@@ -1,6 +1,6 @@
 <template>
 	<main>
-		<h1>Dyno run</h1>
+		<h1>Run</h1>
 		<DynoRunData />
 		<DynoRunControls />
 	</main>

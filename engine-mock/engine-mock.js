@@ -58,7 +58,7 @@ setInterval(() => {
     rpm += (0 - rpm) * 0.2;
   }
   rpm = Math.max(0, Math.min(15000, rpm));
-  console.log(`Engine state - Started: ${started}, Throttle: ${throttlePosPerc}%, RPM: ${Math.round(rpm)}`);
+  //console.log(`Engine state - Started: ${started}, Throttle: ${throttlePosPerc}%, RPM: ${Math.round(rpm)}`);
   // Send update to Nuxt app
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'update-engine', data: { rpm: Math.round(rpm) } }));

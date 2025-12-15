@@ -31,7 +31,6 @@ div {
 span {
 	font-weight: bold;
 	font-size: 20px;
-	color: #333;
 }
 span:not(:first-child) {
 	font-size: 40px;
