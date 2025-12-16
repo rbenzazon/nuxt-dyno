@@ -13,7 +13,6 @@
 import { ref, computed, watch } from 'vue';
 import { maxLoadlbft } from '~~/shared/dyno';
 
-
 const startText = 'Start Capture';
 const stopText = 'Stop Capture';
 const isRunning = ref(false);
@@ -28,10 +27,10 @@ const dynoState = useDynoStateStore();
 
 const debounceMap = new Map();
 
-function debounceLocalUpdate(store,localRef,val) {
-	if(debounceMap.has(store)){
+function debounceLocalUpdate(store, localRef, val) {
+	if (debounceMap.has(store)) {
 		clearTimeout(debounceMap.get(store));
-	}else{
+	} else {
 		const timeoutId = setTimeout(() => {
 			if (val !== undefined && val !== localRef.value) {
 				localRef.value = val;
@@ -43,17 +42,17 @@ function debounceLocalUpdate(store,localRef,val) {
 }
 
 function syncRefWithStore(localRef, store, storeKey) {
-  // Local -> Store
-  watch(localRef, (val) => {
-    store.update({ [storeKey]: val });
-  });
-  // Store -> Local
-  watch(
-    () => store.state?.[storeKey],
-    (val) => {
-      debounceLocalUpdate(store, localRef, val);
-    }
-  );
+	// Local -> Store
+	watch(localRef, (val) => {
+		store.update({ [storeKey]: val });
+	});
+	// Store -> Local
+	watch(
+		() => store.state?.[storeKey],
+		(val) => {
+			debounceLocalUpdate(store, localRef, val);
+		},
+	);
 }
 
 const toggleCapture = () => {
@@ -66,7 +65,6 @@ syncRefWithStore(throttle, engineState, 'throttlePosPerc');
 syncRefWithStore(isFanOn, dynoState, 'isFanOn');
 syncRefWithStore(isRunning, dynoState, 'isCapturing');
 syncRefWithStore(load, dynoState, 'loadlbft');
-
 </script>
 
 <style scoped>

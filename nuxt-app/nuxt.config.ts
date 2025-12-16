@@ -6,11 +6,11 @@ export default defineNuxtConfig({
 		dirs: ['~/stores'],
 	},
 	compatibilityDate: '2025-07-15',
-	devtools: { 
+	devtools: {
 		enabled: true,
 		timeline: {
 			enabled: true,
-		}
+		},
 	},
 	css: ['~/assets/main.css'],
 	nitro: {

@@ -1,5 +1,4 @@
-// server/api/dyno-state.get.ts
-import EngineState from '../engine-state';
+import EngineState from '~~/shared/engine-state';
 import { defineEventHandler } from 'h3';
 
 export default defineEventHandler((event) => {

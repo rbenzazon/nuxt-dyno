@@ -8,7 +8,6 @@ class DynoState {
 	public loadCellLbs: number = 0;
 	public isFanOn: boolean = false;
 	public isCapturing: boolean = false;
-	public capturedData: Array<any> = [];
 	public currentRunId: string = '';
 	public ambientTempC: number = 0;
 	public ambientHumidityPerc: number = 0;

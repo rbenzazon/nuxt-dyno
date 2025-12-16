@@ -6,7 +6,7 @@
 
 <script setup>
 import * as d3 from 'd3';
-import { onMounted, watch, useTemplateRef } from 'vue';
+import { onMounted, useTemplateRef } from 'vue';
 const props = defineProps({
 	rpm: {
 		type: Number,
@@ -152,29 +152,9 @@ function createDial() {
 		.attr('font-family', 'Vipnagorgialla')
 		.text(props.unit);
 }
-// Update the dial with new RPM values
-const updateDial = (rpm) => {
-
-	/*const angle = (rpm - props.min) / (props.max - props.min) * 2 * Math.PI;
-        console.log("Updating dial to angle:", angle);
-        gRef.value.select("path")
-            .datum({ endAngle: angle })
-            .transition()
-            .duration(750)
-            .attr("d", arc);*/
-};
 
 onMounted(() => {
 	createDial();
-	updateDial(props.rpm);
-	// react to prop changes
-	watch(
-		() => props.rpm,
-		(newRpm) => {
-			updateDial(newRpm);
-		},
-		{ immediate: true },
-	);
 });
 </script>
 
