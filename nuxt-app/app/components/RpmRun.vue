@@ -1,6 +1,6 @@
 <template>
 	<RpmDialNeedle :angle="angle" />
-	<svg ref="svgRef" width="200" height="200" />
+	<svg ref="svgRef" width="200" height="200"></svg>
 	<span>{{ rpm }}</span>
 </template>
 
@@ -40,7 +40,6 @@ const props = defineProps({
 });
 const startAngle = Math.PI;
 const endAngle = 2.5 * Math.PI;
-const majorAngle = (endAngle - startAngle) / (props.max / 1000);
 
 const angle = computed(() => (props.rpm / props.max) * (endAngle - startAngle) - Math.PI);
 
@@ -54,6 +53,7 @@ function createDial() {
 	const width = svg.attr('width');
 	const height = svg.attr('height');
 	const radius = Math.min(width, height) / 2 - 10;
+	const majorAngle = (endAngle - startAngle) / (props.max / 1000);
 
 	const majorGraduations = new Array(props.max / 1000 + 1).fill(0).map((_, i) => i);
 
@@ -156,6 +156,14 @@ function createDial() {
 onMounted(() => {
 	createDial();
 });
+
+watch(
+	() => props.max,
+	() => {
+		d3.select(svgRef.value).selectAll('*').remove();
+		createDial();
+	},
+);
 </script>
 
 <style scoped>

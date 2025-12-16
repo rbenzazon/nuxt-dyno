@@ -39,6 +39,7 @@ const webSocket = defineWebSocketHandler({
 				// Clear captured frames when starting a new capture session
 				if (msg.data.isCapturing === true && dynoState.isCapturing === false) {
 					capturedFrames.length = 0;
+					sendPeers({ type: 'clearFrames' });
 				}
 				Object.assign(dynoState, msg.data);
 				dirty = true;
@@ -57,20 +58,21 @@ const webSocket = defineWebSocketHandler({
 		console.log('[ws] error');
 	},
 });
-console.log('WebSocket handler initialized');
 setInterval(() => {
 	if (dirty) {
-		peers.forEach((peer) => {
-			peer.send(JSON.stringify({ type: 'state', data: { engineState, dynoState } }));
-		});
+		sendPeers({ type: 'state', data: { engineState, dynoState } });
 		dirty = false;
 	}
 	if (lastFrames.length > 0) {
-		peers.forEach((peer) => {
-			peer.send(JSON.stringify({ type: 'frame', data: lastFrames }));
-		});
+		sendPeers({ type: 'frame', data: lastFrames });
 		lastFrames.length = 0;
 	}
 }, refreshRate);
+
+function sendPeers(message: any) {
+	peers.forEach((peer) => {
+		peer.send(JSON.stringify(message));
+	});
+}
 
 export default webSocket;
