@@ -4,54 +4,54 @@
 	<span>{{ rpm }}</span>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import * as d3 from 'd3';
 import { onMounted, useTemplateRef } from 'vue';
-const props = defineProps({
-	rpm: {
-		type: Number,
-		required: true,
+
+const props = withDefaults(
+	defineProps<{
+		rpm: number;
+		unit?: string;
+		min?: number;
+		max?: number;
+		yellowline?: number;
+		redline?: number;
+	}>(),
+	{
+		unit: 'x1000',
+		min: 0,
+		max: 10000,
+		yellowline: 8000,
+		redline: 9000,
 	},
-	unit: {
-		type: String,
-		required: false,
-		default: 'x1000',
-	},
-	min: {
-		type: Number,
-		required: false,
-		default: 0,
-	},
-	max: {
-		type: Number,
-		required: false,
-		default: 10000,
-	},
-	yellowline: {
-		type: Number,
-		required: false,
-		default: 8000,
-	},
-	redline: {
-		type: Number,
-		required: false,
-		default: 9000,
-	},
-});
+);
+
 const startAngle = Math.PI;
 const endAngle = 2.5 * Math.PI;
 
 const angle = computed(() => (props.rpm / props.max) * (endAngle - startAngle) - Math.PI);
 
 const svgRef = useTemplateRef('svgRef');
-const gRef = ref(null);
+const gRef = ref<d3.Selection<SVGGElement, unknown, null, undefined> | null>(null);
 let arc;
+
+function isSVGElement(element: SVGSVGElement | null): element is SVGSVGElement {
+	return element != null && element instanceof SVGSVGElement;
+}
+function isSVGElementSelection(
+	element: d3.Selection<SVGSVGElement, unknown, null, undefined> | null,
+): element is d3.Selection<SVGSVGElement, unknown, null, undefined> {
+	return element != null;
+}
 
 function createDial() {
 	//create a rpm dial using d3
+	if (!isSVGElement(svgRef.value)) return;
 	const svg = d3.select(svgRef.value);
-	const width = svg.attr('width');
-	const height = svg.attr('height');
+	if (!isSVGElementSelection(svg)) return;
+	console.log(svg);
+	const width = Number(svg.attr('width'));
+	const height = Number(svg.attr('height'));
 	const radius = Math.min(width, height) / 2 - 10;
 	const majorAngle = (endAngle - startAngle) / (props.max / 1000);
 
@@ -59,32 +59,40 @@ function createDial() {
 
 	gRef.value = svg.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
 
-	arc = d3
-		.arc()
+	arc = d3.arc()({
+		innerRadius: radius - 35,
+		outerRadius: radius - 40,
+		startAngle: startAngle,
+		endAngle: endAngle,
+	});
+	/*
 		.innerRadius(radius - 35)
 		.outerRadius(radius - 40)
 		.startAngle(startAngle)
-		.endAngle(endAngle);
+		.endAngle(endAngle);)*/
 
 	gRef.value.append('path').datum({ endAngle }).style('fill', 'grey').attr('d', arc);
 
-	const yellowArc = d3
-		.arc()
-		.innerRadius(radius - 10)
-		.outerRadius(radius)
-		.startAngle(startAngle + ((props.yellowline - props.min) / (props.max - props.min)) * (endAngle - startAngle))
-		.endAngle(startAngle + ((props.redline - props.min) / (props.max - props.min)) * (endAngle - startAngle));
-	gRef.value.append('path').datum({ endAngle: yellowArc.endAngle() }).style('fill', 'yellow').attr('d', yellowArc);
+	const yellowEndAngle = startAngle + ((props.redline - props.min) / (props.max - props.min)) * (endAngle - startAngle);
+	const yellowArc = d3.arc()({
+		innerRadius: radius - 10,
+		outerRadius: radius,
+		startAngle: startAngle + ((props.yellowline - props.min) / (props.max - props.min)) * (endAngle - startAngle),
+		endAngle: yellowEndAngle,
+	});
+	gRef.value.append('path').datum({ endAngle: yellowEndAngle }).style('fill', 'yellow').attr('d', yellowArc);
 
-	const redArc = d3
-		.arc()
-		.innerRadius(radius - 10)
-		.outerRadius(radius)
-		.startAngle(startAngle + ((props.redline - props.min) / (props.max - props.min)) * (endAngle - startAngle))
-		.endAngle(endAngle);
-	gRef.value.append('path').datum({ endAngle: redArc.endAngle() }).style('fill', 'red').attr('d', redArc);
+	const redEndAngle = endAngle;
+	const redArc = d3.arc()({
+		innerRadius: radius - 10,
+		outerRadius: radius,
+		startAngle: startAngle + ((props.redline - props.min) / (props.max - props.min)) * (endAngle - startAngle),
+		endAngle: redEndAngle,
+	});
+	gRef.value.append('path').datum({ endAngle: redEndAngle }).style('fill', 'red').attr('d', redArc);
 
 	majorGraduations.forEach((graduation, index) => {
+		if (!gRef.value) return;
 		const angle = startAngle + graduation * majorAngle - Math.PI / 2;
 		const x1 = (radius - 10) * Math.cos(angle);
 		const y1 = (radius - 10) * Math.sin(angle);

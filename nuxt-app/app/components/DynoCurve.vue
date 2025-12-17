@@ -1,5 +1,5 @@
 <template>
-	<svg class="dyno-curve" ref="svgRef"></svg>
+	<svg ref="svgRef" class="dyno-curve"></svg>
 </template>
 
 <script lang="ts" setup>

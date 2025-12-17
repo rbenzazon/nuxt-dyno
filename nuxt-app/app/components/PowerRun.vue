@@ -5,18 +5,16 @@
 	</div>
 </template>
 
-<script setup>
-defineProps({
-	power: {
-		type: Number,
-		required: true,
+<script lang="ts" setup>
+withDefaults(
+	defineProps<{
+		power: number;
+		unit?: string;
+	}>(),
+	{
+		unit: 'hp',
 	},
-	unit: {
-		type: String,
-		required: false,
-		default: 'hp',
-	},
-});
+);
 </script>
 
 <style scoped>

@@ -2,13 +2,15 @@ import EngineState from '~~/shared/engine-state';
 import DynoState from '~~/shared/dyno-state';
 import { UPDATE_DYNO, UPDATE_ENGINE } from '~~/shared/app-state';
 import { partialEqual } from '~~/shared/utils/equal';
-import { CaptureFrame } from '~~/shared/types/capture-frame';
+import type { CaptureFrame } from '~~/shared/types/capture-frame';
+import type { MessagePayload, UpdateMessage } from '~~/shared/types/message';
 import { capturedFrames } from '~~/server/captured-frames';
+import type { AdapterInternal, Peer } from 'crossws';
 
 let dirty = true;
 const rps = 30;
 const refreshRate = 1000 / rps;
-const peers = new Set<any>();
+const peers = new Set<Peer<AdapterInternal>>();
 const engineState = EngineState.getInstance();
 const dynoState = DynoState.getInstance();
 
@@ -23,7 +25,7 @@ const webSocket = defineWebSocketHandler({
 
 	async message(peer, message) {
 		try {
-			const msg: any = await message.json();
+			const msg: UpdateMessage = await message.json();
 			if (msg.type === UPDATE_ENGINE && msg.data && !partialEqual(msg.data, engineState)) {
 				Object.assign(engineState, msg.data);
 				if (dynoState.isCapturing) {
@@ -49,13 +51,13 @@ const webSocket = defineWebSocketHandler({
 		}
 	},
 
-	close(peer, event) {
+	close(peer) {
 		peers.delete(peer);
 		console.log('[ws] close');
 	},
 
-	error(peer, error) {
-		console.log('[ws] error');
+	error(_, error) {
+		console.log('[ws] error', error);
 	},
 });
 setInterval(() => {
@@ -69,7 +71,7 @@ setInterval(() => {
 	}
 }, refreshRate);
 
-function sendPeers(message: any) {
+function sendPeers(message: MessagePayload) {
 	peers.forEach((peer) => {
 		peer.send(JSON.stringify(message));
 	});

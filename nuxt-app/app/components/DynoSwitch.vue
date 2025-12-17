@@ -7,18 +7,16 @@
 		</label>
 	</div>
 </template>
-<script setup>
-const props = defineProps({
-	value: {
-		type: Boolean,
-		required: true,
+<script lang="ts" setup>
+const props = withDefaults(
+	defineProps<{
+		value: boolean;
+		label?: string;
+	}>(),
+	{
+		label: '',
 	},
-	label: {
-		type: String,
-		required: false,
-		default: '',
-	},
-});
+);
 
 const emit = defineEmits(['update:value']);
 

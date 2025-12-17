@@ -5,15 +5,15 @@
 	</div>
 </template>
 
-<script setup>
-//add afr prop
-defineProps({
-	afr: {
-		type: Number,
-		required: false,
-		default: 13.2,
+<script lang="ts" setup>
+withDefaults(
+	defineProps<{
+		afr?: number;
+	}>(),
+	{
+		afr: 14.7,
 	},
-});
+);
 </script>
 
 <style scoped>

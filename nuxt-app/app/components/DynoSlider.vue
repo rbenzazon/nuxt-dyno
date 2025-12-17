@@ -5,33 +5,22 @@
 		<span>{{ value }}</span>
 	</div>
 </template>
-<script setup>
-const props = defineProps({
-	value: {
-		type: Number,
-		required: true,
+<script lang="ts" setup>
+const props = withDefaults(
+	defineProps<{
+		value: number;
+		min?: number;
+		max?: number;
+		step?: number;
+		label?: string;
+	}>(),
+	{
+		min: 0,
+		max: 100,
+		step: 1,
+		label: '',
 	},
-	min: {
-		type: Number,
-		required: false,
-		default: 0,
-	},
-	max: {
-		type: Number,
-		required: false,
-		default: 100,
-	},
-	step: {
-		type: Number,
-		required: false,
-		default: 1,
-	},
-	label: {
-		type: String,
-		required: false,
-		default: '',
-	},
-});
+);
 
 const emit = defineEmits(['update:value']);
 
@@ -44,8 +33,8 @@ const localValue = computed({
 	},
 });
 
-function onInput(event) {
-	const newValue = Number(event.target.value);
+function onInput(event: Event) {
+	const newValue = Number((event.target as HTMLInputElement).value);
 	localValue.value = newValue;
 }
 </script>
@@ -68,7 +57,4 @@ label {
 	font-size: 1em;
 	margin-bottom: 5px;
 }
-/*span {
-	color: var(--text-color);
-}*/
 </style>

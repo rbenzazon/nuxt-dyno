@@ -11,7 +11,7 @@
 			<AFRRun :afr="13.2" />
 		</div>
 		<div class="item-3fr">
-			<DynoCurve :points="rpmPoints" :maxY="maxRpm" />
+			<DynoCurve :points="rpmPoints" :max-y="maxRpm" />
 		</div>
 	</div>
 </template>

@@ -9,7 +9,7 @@
 	</div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, computed, watch } from 'vue';
 import { maxLoadlbft } from '~~/shared/dyno';
 
@@ -25,9 +25,21 @@ const load = ref(0);
 const engineState = useEngineStateStore();
 const dynoState = useDynoStateStore();
 
+type EngineStateStore = typeof engineState;
+type DynoStateStore = typeof dynoState;
+
+type StoreType = EngineStateStore | DynoStateStore;
+type StoreState<T extends StoreType> = T['state'];
+type StoreKey<T extends StoreType> = keyof StoreState<T>;
+type StoreValue<T extends StoreType, K extends StoreKey<T>> = StoreState<T>[K];
+
 const debounceMap = new Map();
 
-function debounceLocalUpdate(store, localRef, val) {
+function debounceLocalUpdate<T extends StoreType, K extends StoreKey<T>>(
+	store: T,
+	localRef: Ref<StoreValue<T, K>>,
+	val: StoreValue<T, K>,
+) {
 	if (debounceMap.has(store)) {
 		clearTimeout(debounceMap.get(store));
 	} else {
@@ -41,14 +53,18 @@ function debounceLocalUpdate(store, localRef, val) {
 	}
 }
 
-function syncRefWithStore(localRef, store, storeKey) {
+function syncRefWithStore<T extends StoreType, K extends StoreKey<T>>(
+	localRef: Ref<StoreValue<T, K>>,
+	store: T,
+	storeKey: K,
+) {
 	// Local -> Store
 	watch(localRef, (val) => {
 		store.update({ [storeKey]: val });
 	});
 	// Store -> Local
 	watch(
-		() => store.state?.[storeKey],
+		() => (store.state as StoreState<T>)[storeKey],
 		(val) => {
 			debounceLocalUpdate(store, localRef, val);
 		},

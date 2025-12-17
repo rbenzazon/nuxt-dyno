@@ -12,7 +12,7 @@
 					d="m98.37063 73.44803 3.262568-3e-3 -0.0361-8.819609c1.17666-0.503636 1.51532-1.43099 1.51009-2.532244l-0.59166-36.44575c-0.0274-1.046001-1.37509-2.759276-2.51117-3.948899-1.038039 1.103375-2.503448 2.828281-2.511008 3.93015l-0.598429 36.47383c-0.04277 1.326746 0.55061 2.053993 1.424558 2.517054z"
 					fill="#fff"
 					stop-color="#000000"
-					style="-inkscape-stroke: none; font-variation-settings: normal; paint-order: markers fill stroke"
+					style="stroke: none; font-variation-settings: normal; paint-order: markers fill stroke"
 				/>
 				<path
 					id="path4-3"
@@ -25,19 +25,20 @@
 					cx="100"
 					cy="100"
 					r="9"
-					style="-inkscape-stroke: none; font-variation-settings: normal; paint-order: markers fill stroke"
+					style="stroke: none; font-variation-settings: normal; paint-order: markers fill stroke"
 				/>
 			</g>
 		</g>
 	</svg>
 </template>
 
-<script setup>
-const props = defineProps({
-	angle: {
-		type: Number,
-		required: false,
-		default: 0,
+<script lang="ts" setup>
+const props = withDefaults(
+	defineProps<{
+		angle?: number;
+	}>(),
+	{
+		angle: 0,
 	},
-});
+);
 </script>

@@ -1,14 +1,16 @@
-const listeners: ((payload: any) => void)[] = [];
-let ws: WebSocket | null = null;
-let currentStateCache: any = null;
+import type { MessagePayload, StateMessage, UpdateMessage } from '~~/shared/types/message';
 
-export function addMessageListener(listener: (payload: any) => void) {
+const listeners: ((payload: MessagePayload) => void)[] = [];
+let ws: WebSocket | null = null;
+let currentStateCache: StateMessage | null = null;
+
+export function addMessageListener(listener: (payload: MessagePayload) => void) {
 	listeners.push(listener);
 	if (currentStateCache) {
 		listener(currentStateCache);
 	}
 }
-export function sendMessage(message: any) {
+export function sendMessage(message: UpdateMessage) {
 	if (ws && ws.readyState === WebSocket.OPEN) {
 		ws.send(JSON.stringify(message));
 	}
