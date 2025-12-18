@@ -11,6 +11,7 @@
 			<AFRRun :afr="13.2" />
 		</div>
 		<div class="item-3fr">
+			<h3 @click="toggleCollapse">RPM Curve</h3>
 			<DynoCurve :points="rpmPoints" :max-y="maxRpm" />
 		</div>
 	</div>
@@ -50,6 +51,14 @@ const rpmPoints = computed(() => {
 	const points = formatRpmData(capturedFramesStore.frames);
 	return points;
 });
+
+function toggleCollapse(event: Event) {
+	console.log('toggle');
+
+	const h3 = event.currentTarget as HTMLElement;
+	h3.classList.toggle('collapsed');
+	h3.parentElement?.classList.toggle('collapsed');
+}
 </script>
 <style scoped>
 .layout {
@@ -67,12 +76,34 @@ const rpmPoints = computed(() => {
 }
 .item-3fr {
 	background-color: #f0f0f0;
+	color: var(--secondary-color);
 	padding: 1rem;
 	border-radius: 8px;
 	text-align: center;
 	grid-column: span 3;
 }
+.layout > *.collapsed > :nth-child(2) {
+	display: none;
+}
 :deep(.item span) {
 	color: var(--secondary-color);
+}
+h3 {
+	text-align: left;
+	cursor: pointer;
+}
+/* collapse arrow on the right of h3 */
+h3::after {
+	content: '';
+	float: right;
+	border: solid var(--secondary-color);
+	border-width: 0 2px 2px 0;
+	display: inline-block;
+	padding: 4px;
+	transform: rotate(-135deg);
+	margin-top: 6px;
+}
+h3.collapsed::after {
+	transform: rotate(45deg);
 }
 </style>
