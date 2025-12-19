@@ -128,10 +128,14 @@ onMounted(() => {
 	drawCurve(props.points);
 	addResizeObserver();
 });
+// type to infer svgRef.value is not undefined
+function isStaleSize(ref: SVGSVGElement): boolean {
+	return ref.clientHeight > 0 && (height !== ref.clientHeight || width !== ref.clientWidth);
+}
 
 function addResizeObserver() {
 	const resizeObserver = new ResizeObserver(() => {
-		if (svgRef.value) {
+		if (svgRef.value && isStaleSize(svgRef.value)) {
 			width = svgRef.value.clientWidth;
 			height = svgRef.value.clientHeight;
 			drawCurve(props.points);
