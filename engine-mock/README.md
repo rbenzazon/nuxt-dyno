@@ -21,12 +21,13 @@ adress: `ws://localhost:3000/web-socket`
 
 Commands are sent using the `state` message type. The following properties are supported:
 
-| Properties                   | Type    | Values     | Description                                   |
-|------------------------------|---------|------------|-----------------------------------------------|
-| `engineState.started`        | boolean | true,false | Starts the engine if `true`, stops if `false` |
-| `engineState.throttlePosPerc`| number  | 0-100      | Sets the throttle position                    |
+| Properties                    | Type    | Values     | Description                                   |
+| ----------------------------- | ------- | ---------- | --------------------------------------------- |
+| `engineState.started`         | boolean | true,false | Starts the engine if `true`, stops if `false` |
+| `engineState.throttlePosPerc` | number  | 0-100      | Sets the throttle position                    |
 
 **Example command message:**
+
 ```javascript
 {
   type: "state",
@@ -41,11 +42,12 @@ Commands are sent using the `state` message type. The following properties are s
 
 Updates are sent using the `update-engine` message type. The engine mock sends the following updates:
 
-| Update              | Type    | Description                |
-|---------------------|---------|----------------------------|
-| `engineState.rpm`   | number  | Current RPM of the engine  |
+| Update            | Type   | Description               |
+| ----------------- | ------ | ------------------------- |
+| `engineState.rpm` | number | Current RPM of the engine |
 
 **Example update message:**
+
 ```javascript
 {
   type: "update-engine",

@@ -3,7 +3,8 @@ import { maxLoadlbft } from '~~/shared/dyno';
 class DynoState {
 	private static instance: DynoState;
 
-	public loadlbft: number = 0;
+	//realistic default
+	public loadlbft: number = 100;
 	public maxLoadlbft: number = maxLoadlbft;
 	public loadCellLbs: number = 0;
 	public isFanOn: boolean = false;
