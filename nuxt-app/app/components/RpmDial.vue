@@ -1,7 +1,9 @@
 <template>
-	<RpmDialNeedle :angle="angle" />
-	<svg ref="svgRef" width="200" height="200"></svg>
-	<span>{{ rpm }}</span>
+	<div id="rpm">
+		<RpmDialNeedle :angle="angle" />
+		<svg ref="svgRef" width="200" height="200"></svg>
+		<span>{{ rpm }}</span>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -175,17 +177,27 @@ watch(
 </script>
 
 <style scoped>
+#rpm {
+	position: relative;
+	width: 200px;
+	height: 200px;
+	text-align: center;
+	margin: 0 auto;
+}
+
 #needle {
 	position: absolute;
 	/* drop shadow */
 	filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
 }
+
 span {
+	/* make the span position identical to the svg center */
+	position: absolute;
+	left: 100px;
+	top: 100px;
 	font-weight: bold;
 	font-size: 22px;
 	color: #333;
-	position: absolute;
-	left: 250px;
-	top: 308px;
 }
 </style>

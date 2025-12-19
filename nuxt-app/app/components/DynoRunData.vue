@@ -2,7 +2,7 @@
 	<h2>Engine data</h2>
 	<div class="layout">
 		<div class="item">
-			<RpmRun :rpm="rpm" :max="maxRpm" />
+			<RpmDial :rpm="rpm" :max="maxRpm" />
 		</div>
 		<div class="item">
 			<PowerRun :power="100" />
@@ -53,8 +53,6 @@ const rpmPoints = computed(() => {
 });
 
 function toggleCollapse(event: Event) {
-	console.log('toggle');
-
 	const h3 = event.currentTarget as HTMLElement;
 	h3.classList.toggle('collapsed');
 	h3.parentElement?.classList.toggle('collapsed');
@@ -91,6 +89,11 @@ function toggleCollapse(event: Event) {
 h3 {
 	text-align: left;
 	cursor: pointer;
+	margin-bottom: 1rem;
+	user-select: none;
+}
+h3.collapsed {
+	margin-bottom: 0;
 }
 /* collapse arrow on the right of h3 */
 h3::after {
