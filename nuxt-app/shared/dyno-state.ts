@@ -16,6 +16,7 @@ class DynoState {
 	public targetCaptureRpm: number = 0;
 	public targetMaxRpm: number = 0;
 	public engineMaxRpm: number = 10000;
+	public engineMaxPowerHp: number = 1000;
 	public runInProgress: boolean = false;
 	public runStartTime: Date | null = null;
 	public runEndTime: Date | null = null;

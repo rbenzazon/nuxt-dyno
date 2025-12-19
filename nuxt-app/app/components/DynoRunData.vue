@@ -5,7 +5,7 @@
 			<RpmDial :rpm="rpm" :max="maxRpm" />
 		</div>
 		<div class="item">
-			<PowerRun :power="100" />
+			<PowerRun :power="power" />
 		</div>
 		<div class="item">
 			<AFRRun :afr="13.2" />
@@ -13,6 +13,16 @@
 		<div class="item-3fr">
 			<h3 @click="toggleCollapse">RPM Curve</h3>
 			<DynoCurve :points="rpmPoints" :max-y="maxRpm" />
+		</div>
+		<div class="item-3fr">
+			<h3 @click="toggleCollapse">Power Curve</h3>
+			<DynoCurve
+				:points="powerPoints"
+				:max-y="maxPower"
+				:y-graduation-step="100"
+				:x-graduation-step="1000"
+				x-unit="rpm"
+			/>
 		</div>
 	</div>
 </template>
@@ -26,10 +36,12 @@ const capturedFramesStore = useCapturedFramesStore();
 const engineState = useEngineStateStore();
 
 const rpm = ref(0);
+const power = ref(0);
 
 function formatRpmData(frames: CaptureFrame[]) {
+	const startTime = frames[0]?.timestamp || 0;
 	const rpmData = frames.map((frame) => {
-		return { x: frame.timestamp, y: frame.engineState?.rpm || 0 };
+		return { x: (frame.timestamp - startTime) / 1000, y: frame.engineState?.rpm || 0 };
 	});
 	return rpmData;
 }
@@ -51,6 +63,26 @@ const rpmPoints = computed(() => {
 	const points = formatRpmData(capturedFramesStore.frames);
 	return points;
 });
+
+const maxPower = computed(() => {
+	return dynoState.state.engineMaxPowerHp || 1000;
+});
+
+const powerPoints = computed(() => {
+	const points = capturedFramesStore.frames.map((frame) => {
+		return { x: frame.engineState?.rpm, y: frame.engineState?.powerHp || 0 };
+	});
+	return points;
+});
+
+watch(
+	() => engineState.state?.powerHp,
+	(val) => {
+		if (typeof val === 'number') {
+			power.value = val;
+		}
+	},
+);
 
 function toggleCollapse(event: Event) {
 	const h3 = event.currentTarget as HTMLElement;

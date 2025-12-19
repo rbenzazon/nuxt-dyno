@@ -1,10 +1,10 @@
 export function torqueAt(throttleVal, rpmVal) {
-	const rpm = [0, 800, 1500, 2500, 3500, 4500, 5500, 6500];
-	const baseTorque = [80, 350, 420, 480, 520, 540, 520, 450]; // 80 Nm at 0 rpm for idle
-	const throttle = [0, 20, 40, 60, 80, 100];
-	// Clamp throttle and rpm to valid ranges
-	throttleVal = Math.max(0, Math.min(100, throttleVal));
-	rpmVal = Math.max(0, Math.min(6500, rpmVal));
+	const rpm = [0, 800, 1500, 2500, 3500, 4500, 5500, 6500,7500,8500,10000];
+  const baseTorque = [0, 350, 420, 480, 520, 540, 520, 450,400,300,0];
+  const throttle = [0, 20, 40, 60, 80, 100];
+  // Clamp throttle and rpm to valid ranges
+  throttleVal = Math.max(0, Math.min(100, throttleVal));
+  rpmVal = Math.max(0, Math.min(10000, rpmVal));
 
 	// Minimum idle torque logic
 	const idleRpmThreshold = 800;

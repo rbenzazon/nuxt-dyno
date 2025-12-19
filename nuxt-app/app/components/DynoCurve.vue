@@ -11,10 +11,16 @@ const props = withDefaults(
 		points: Point[];
 		minY?: number;
 		maxY?: number;
+		xGraduationStep?: number;
+		xUnit?: string;
+		yGraduationStep?: number;
 	}>(),
 	{
 		minY: 0,
 		maxY: 100,
+		xGraduationStep: 1,
+		xUnit: 's',
+		yGraduationStep: 1000,
 	},
 );
 const svgRef = ref<SVGSVGElement | null>(null);
@@ -39,14 +45,14 @@ function drawCurve(points: Point[]) {
 	xScale.domain(d3.extent(points, (d) => d.x) as [number, number]);
 	yScale.domain([props.minY, props.maxY]);
 
-	const rpmGraduations = new Array(Math.ceil(props.maxY / 1000) + 1).fill(0).map((_, i) => i);
+	const yGraduations = new Array(Math.ceil(props.maxY / props.yGraduationStep) + 1).fill(0).map((_, i) => i);
 
-	const startTime = points[0].x;
-	const endTime = points[points.length - 1].x;
+	const startXValue = points[0].x;
+	const endXValue = points[points.length - 1].x;
 
-	const lengthInSeconds = (endTime - startTime) / 1000;
+	const xSpan = (endXValue - startXValue) / props.xGraduationStep;
 
-	const timeGraduations = new Array(Math.floor(lengthInSeconds) + 1).fill(0).map((_, i) => i);
+	const xGraduations = new Array(Math.floor(xSpan) + 1).fill(0).map((_, i) => i);
 
 	//draw a rect representing the innerwidth and innerheight
 	//only outline and no fill
@@ -60,8 +66,8 @@ function drawCurve(points: Point[]) {
 		.attr('stroke', '#f0f0f0');
 
 	// Draw graduations
-	rpmGraduations.forEach((i) => {
-		const y = yScale(i * 1000);
+	yGraduations.forEach((i) => {
+		const y = yScale(i * props.yGraduationStep);
 		svg
 			.append('line')
 			.attr('x1', margin.left)
@@ -72,17 +78,18 @@ function drawCurve(points: Point[]) {
 			.attr('stroke-dasharray', '4 2');
 		svg
 			.append('text')
-			.attr('x', 5)
-			.attr('y', y - 5)
-			.text(`${i * 1000}`)
+			.attr('x', margin.left - 5)
+			.attr('y', y + 3)
+			.attr('text-anchor', 'end')
+			.text(`${i * props.yGraduationStep}`)
 			.attr('fill', '#666')
 			.attr('font-size', '10px');
 	});
 
 	// Draw time graduations at the bottom
-	if (lengthInSeconds > 0) {
-		timeGraduations.forEach((t) => {
-			const x = margin.left + (t / lengthInSeconds) * (width - margin.left - margin.right);
+	if (xSpan > 0) {
+		xGraduations.forEach((t) => {
+			const x = margin.left + (t / xSpan) * (width - margin.left - margin.right);
 			svg
 				.append('line')
 				.attr('x1', x)
@@ -95,7 +102,7 @@ function drawCurve(points: Point[]) {
 				.append('text')
 				.attr('x', x + 5)
 				.attr('y', height - margin.bottom + 15)
-				.text(`${t}s`)
+				.text(`${t * props.xGraduationStep} ${props.xUnit}`)
 				.attr('fill', '#666')
 				.attr('font-size', '10px');
 		});

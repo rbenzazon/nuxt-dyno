@@ -51,6 +51,8 @@ connectWebSocket();
 
 // Engine simulation loop
 setInterval(() => {
+  let engineTorque = 0;
+  let powerHp = 0;
 	// Engine simulation: if started, calculate torque and integrate dyno load
 	if (started) {
 		// Clamp rpm to non-negative before using in torqueAt
@@ -58,7 +60,7 @@ setInterval(() => {
 		// Interpolate dyno load: dynoLoadLbFt is the load at 10000 rpm
 		const dynoLoad = dynoLoadLbFt * (rpm / maxRpm);
 		// Get engine torque at current throttle and rpm
-		const engineTorque = torqueAt(throttlePosPerc, rpm);
+		engineTorque = torqueAt(throttlePosPerc, rpm);
 		// Calculate net torque after dyno load (simple subtraction)
 		const netTorque = engineTorque - dynoLoad;
 		// Convert net torque to angular acceleration (alpha = torque / inertia)
@@ -81,7 +83,7 @@ setInterval(() => {
 	// Calculate power (HP) and torque (lb-ft)
 	const torqueFtLbs = engineTorque; // already in lb-ft
 	// Power (HP) = (Torque (lb-ft) * RPM) / 5252
-	const powerHp = (torqueFtLbs * rpm) / 5252;
+	powerHp = (torqueFtLbs * rpm) / 5252;
 	// Send update to Nuxt app
 	if (ws && ws.readyState === WebSocket.OPEN) {
 		ws.send(
@@ -106,14 +108,14 @@ app.listen(PORT, () => {
 	console.log(`Engine mock listening on http://localhost:${PORT}`);
 });
 
-function cleanup() {
+function cleanup(signal) {
 	if (ws && ws.readyState === WebSocket.OPEN) {
 		ws.close();
-		console.log('WebSocket connection closed gracefully.');
+		console.log('WebSocket connection closed gracefully.', signal);
 	}
 	process.exit(0);
 }
 
-process.on('SIGINT', cleanup); // Ctrl+C
-process.on('SIGTERM', cleanup); // Termination signal
-process.on('exit', cleanup); // Process exit
+process.on('SIGINT', ()=>cleanup("SIGINT")); // Ctrl+C
+process.on('SIGTERM', ()=>cleanup("SIGTERM")); // Termination signal
+process.on('exit', ()=>cleanup("exit")); // Process exit
