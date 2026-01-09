@@ -6,6 +6,7 @@ A mock engine for testing and development purposes. It simulates basic engine fu
 
 This app uses nodemon to reload on code changes.
 To run the engine mock, use the following command:
+
 ```bash
 pnpm run dev
 ```
@@ -56,7 +57,6 @@ Updates are sent using the `update-engine` message type. The engine mock sends t
 | `engineState.rpm`         | number | Current RPM of the engine |
 | `engineState.torqueFtLbs` | number | Current torque in Ft-Lbs  |
 | `engineState.powerHp`     | number | Current power in HP       |
-
 
 **Example update message:**
 

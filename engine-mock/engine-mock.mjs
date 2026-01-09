@@ -6,7 +6,9 @@ import { torqueAt } from './torque-curve.mjs';
 const app = express();
 const PORT = 4000; // Engine mock HTTP port (not used for ws)
 
-const maxRpm = 10000;
+import { profiles } from './engine-profile.mjs';
+const currentProfile = profiles['small-block-353-v1'];
+const maxRpm = currentProfile.rpm[currentProfile.rpm.length - 1];
 // Engine state
 let started = false;
 let throttlePosPerc = 0;
@@ -51,8 +53,9 @@ connectWebSocket();
 
 // Engine simulation loop
 setInterval(() => {
-  let engineTorque = 0;
-  let powerHp = 0;
+	let torqueFigures;
+	let engineTorque = 0;
+	let powerHp = 0;
 	// Engine simulation: if started, calculate torque and integrate dyno load
 	if (started) {
 		// Clamp rpm to non-negative before using in torqueAt
@@ -60,7 +63,13 @@ setInterval(() => {
 		// Interpolate dyno load: dynoLoadLbFt is the load at 10000 rpm
 		const dynoLoad = dynoLoadLbFt * (rpm / maxRpm);
 		// Get engine torque at current throttle and rpm
-		engineTorque = torqueAt(throttlePosPerc, rpm);
+		try {
+			torqueFigures = torqueAt(currentProfile, throttlePosPerc, rpm);
+		} catch (e) {
+			console.error('Error calculating torque:', e);
+			return;
+		}
+		engineTorque = torqueFigures.torque;
 		// Calculate net torque after dyno load (simple subtraction)
 		const netTorque = engineTorque - dynoLoad;
 		// Convert net torque to angular acceleration (alpha = torque / inertia)
@@ -70,10 +79,10 @@ setInterval(() => {
 		rpm += netTorque * k;
 		// Add a small friction/drag term to prevent runaway rpm
 		rpm -= rpm * 0.005;
-		console.log(
+		/*console.log(
 			`Engine running - Throttle: ${throttlePosPerc}%, RPM: ${Math.round(rpm)}`,
 			`Torque: ${engineTorque?.toFixed(1)} lb-ft, DynoLoad: ${dynoLoad.toFixed(1)} lb-ft`,
-		);
+		);*/
 	} else {
 		rpm += (0 - rpm) * 0.05;
 	}
@@ -93,6 +102,7 @@ setInterval(() => {
 					rpm: Math.round(rpm),
 					torqueFtLbs: Number(torqueFtLbs.toFixed(2)),
 					powerHp: Number(powerHp.toFixed(2)),
+					afr: Number(torqueFigures?.afr?.toFixed(1)) || null,
 				},
 			}),
 		);
@@ -116,6 +126,6 @@ function cleanup(signal) {
 	process.exit(0);
 }
 
-process.on('SIGINT', ()=>cleanup("SIGINT")); // Ctrl+C
-process.on('SIGTERM', ()=>cleanup("SIGTERM")); // Termination signal
-process.on('exit', ()=>cleanup("exit")); // Process exit
+process.on('SIGINT', () => cleanup('SIGINT')); // Ctrl+C
+process.on('SIGTERM', () => cleanup('SIGTERM')); // Termination signal
+process.on('exit', () => cleanup('exit')); // Process exit
