@@ -7,7 +7,7 @@ const app = express();
 const PORT = 4000; // Engine mock HTTP port (not used for ws)
 
 import { profiles } from './engine-profile.mjs';
-const currentProfile = profiles['small-block-353-v1'];
+const currentProfile = profiles['small-block-350-v1'];
 const maxRpm = currentProfile.rpm[currentProfile.rpm.length - 1];
 // Engine state
 let started = false;
