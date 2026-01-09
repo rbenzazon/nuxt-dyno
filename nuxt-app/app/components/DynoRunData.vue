@@ -8,7 +8,7 @@
 			<PowerRun :power="power" />
 		</div>
 		<div class="item">
-			<AFRRun :afr="13.2" />
+			<AFRRun :afr="afr" />
 		</div>
 		<div class="item-3fr">
 			<h3 @click="toggleCollapse">RPM Curve</h3>
@@ -37,6 +37,7 @@ const engineState = useEngineStateStore();
 
 const rpm = ref(0);
 const power = ref(0);
+const afr = ref(0);
 
 function formatRpmData(frames: CaptureFrame[]) {
 	const startTime = frames[0]?.timestamp || 0;
@@ -80,6 +81,15 @@ watch(
 	(val) => {
 		if (typeof val === 'number') {
 			power.value = val;
+		}
+	},
+);
+
+watch(
+	() => engineState.state?.afr,
+	(val) => {
+		if (typeof val === 'number') {
+			afr.value = val;
 		}
 	},
 );
