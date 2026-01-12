@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import { UPDATE_ENGINE } from '~~/shared/app-state';
+import { STATE, UPDATE_ENGINE } from '~~/shared/app-state';
 import { shallowEqual } from '~~/shared/utils/equal';
 import { addMessageListener, sendMessage } from './websocket-client';
 import type EngineState from '~~/shared/engine-state';
@@ -20,7 +20,7 @@ export const useEngineStateStore = defineStore('engineState', () => {
 
 	if (typeof window !== 'undefined') {
 		addMessageListener((payload: MessagePayload) => {
-			if (payload.type === 'state' && !shallowEqual(payload.data.engineState, state.value)) {
+			if (payload.type === STATE && !shallowEqual(payload.data.engineState, state.value)) {
 				updatingFromWs = true;
 				update(payload.data.engineState);
 				updatingFromWs = false;

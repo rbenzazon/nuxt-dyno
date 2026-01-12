@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { CLEAR_FRAMES, FRAME } from '~~/shared/app-state';
 import type { MessagePayload } from '~~/shared/types/message.ts';
 
 export const useCapturedFramesStore = defineStore('capturedFrames', () => {
@@ -15,9 +16,9 @@ export const useCapturedFramesStore = defineStore('capturedFrames', () => {
 
 	if (typeof window !== 'undefined') {
 		addMessageListener((payload: MessagePayload) => {
-			if (payload.type === 'frame') {
+			if (payload.type === FRAME) {
 				addFrames(payload.data);
-			} else if (payload.type === 'clearFrames') {
+			} else if (payload.type === CLEAR_FRAMES) {
 				clearFrames();
 			}
 		});

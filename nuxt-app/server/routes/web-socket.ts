@@ -1,6 +1,6 @@
 import EngineState from '~~/shared/engine-state';
 import DynoState from '~~/shared/dyno-state';
-import { UPDATE_DYNO, UPDATE_ENGINE } from '~~/shared/app-state';
+import { CLEAR_FRAMES, FRAME, STATE, UPDATE_DYNO, UPDATE_ENGINE } from '~~/shared/app-state';
 import { partialEqual } from '~~/shared/utils/equal';
 import type { CaptureFrame } from '~~/shared/types/capture-frame';
 import type { MessagePayload, UpdateMessage } from '~~/shared/types/message';
@@ -20,7 +20,7 @@ const webSocket = defineWebSocketHandler({
 	open(peer) {
 		peers.add(peer);
 		console.log('[ws] open');
-		peer.send(JSON.stringify({ type: 'state', data: { engineState, dynoState } }));
+		peer.send(JSON.stringify({ type: STATE, data: { engineState, dynoState } }));
 	},
 
 	async message(peer, message) {
@@ -41,7 +41,7 @@ const webSocket = defineWebSocketHandler({
 				// Clear captured frames when starting a new capture session
 				if (msg.data.isCapturing === true && dynoState.isCapturing === false) {
 					capturedFrames.length = 0;
-					sendPeers({ type: 'clearFrames' });
+					sendPeers({ type: CLEAR_FRAMES });
 				}
 				Object.assign(dynoState, msg.data);
 				dirty = true;
@@ -62,11 +62,11 @@ const webSocket = defineWebSocketHandler({
 });
 setInterval(() => {
 	if (dirty) {
-		sendPeers({ type: 'state', data: { engineState, dynoState } });
+		sendPeers({ type: STATE, data: { engineState, dynoState } });
 		dirty = false;
 	}
 	if (lastFrames.length > 0) {
-		sendPeers({ type: 'frame', data: lastFrames });
+		sendPeers({ type: FRAME, data: lastFrames });
 		lastFrames.length = 0;
 	}
 }, refreshRate);
