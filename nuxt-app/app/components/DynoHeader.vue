@@ -1,9 +1,14 @@
+<script setup lang="ts">
+import FPSMonitor from './FPSMonitor.vue';
+</script>
+
 <template>
 	<header>
 		<h1>Nuxt Dyno</h1>
 		<nav>
 			<NuxtLink to="/">Home</NuxtLink>
 			<NuxtLink to="/run">Run</NuxtLink>
+			<FPSMonitor />
 		</nav>
 	</header>
 </template>
@@ -21,12 +26,17 @@ h1 {
 	font-size: 1.5rem;
 	margin: 0;
 }
-nav a {
+nav {
+	display: flex;
+	flex-direction: row;
+}
+:deep(nav > *) {
 	color: var(--secondary-color);
 	margin-right: 1rem;
+	font-size: 16px;
 	text-decoration: none;
 }
-nav a:hover {
+nav > *:hover {
 	text-decoration: underline;
 }
 </style>
