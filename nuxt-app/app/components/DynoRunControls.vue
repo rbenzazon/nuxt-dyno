@@ -35,6 +35,13 @@ type StoreValue<T extends StoreType, K extends StoreKey<T>> = StoreState<T>[K];
 
 const debounceMap = new Map();
 
+/**
+ * Debounces updates on local refs to avoid UI race condition where
+ * the displayed values flicker or jump
+ * @param store 
+ * @param localRef 
+ * @param val 
+ */
 function debounceLocalUpdate<T extends StoreType, K extends StoreKey<T>>(
 	store: T,
 	localRef: Ref<StoreValue<T, K>>,
@@ -53,6 +60,12 @@ function debounceLocalUpdate<T extends StoreType, K extends StoreKey<T>>(
 	}
 }
 
+/**
+ * Helper to sync a local ref with a store key in both directions
+ * @param localRef 
+ * @param store 
+ * @param storeKey 
+ */
 function syncRefWithStore<T extends StoreType, K extends StoreKey<T>>(
 	localRef: Ref<StoreValue<T, K>>,
 	store: T,
