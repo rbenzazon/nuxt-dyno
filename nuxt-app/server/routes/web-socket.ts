@@ -8,7 +8,7 @@ import { capturedFrames } from '~~/server/captured-frames';
 import type { AdapterInternal, Peer } from 'crossws';
 
 let dirty = true;
-const rps = 30;
+const rps = 60;
 const refreshRate = 1000 / rps;
 const peers = new Set<Peer<AdapterInternal>>();
 const engineState = EngineState.getInstance();
@@ -16,11 +16,16 @@ const dynoState = DynoState.getInstance();
 
 const lastFrames: Array<CaptureFrame> = [];
 
+let lastUpdateMsgTimeStamp: number = Date.now();
+let updateMsgTime: number = 0;
+let lastFrameMsgTimeStamp: number = Date.now();
+let frameMsgTime: number = 0;
+
 const webSocket = defineWebSocketHandler({
 	open(peer) {
 		peers.add(peer);
 		console.log('[ws] open');
-		peer.send(JSON.stringify({ type: STATE, data: { engineState, dynoState } }));
+		peer.send(JSON.stringify({ type: STATE, refreshTime: updateMsgTime, data: { engineState, dynoState } }));
 	},
 
 	async message(peer, message) {
@@ -62,11 +67,15 @@ const webSocket = defineWebSocketHandler({
 });
 setInterval(() => {
 	if (dirty) {
-		sendPeers({ type: STATE, data: { engineState, dynoState } });
+		updateMsgTime = Math.min(Date.now() - lastUpdateMsgTimeStamp, 100);
+		sendPeers({ type: STATE, refreshTime: updateMsgTime, data: { engineState, dynoState } });
+		lastUpdateMsgTimeStamp = Date.now();
 		dirty = false;
 	}
 	if (lastFrames.length > 0) {
-		sendPeers({ type: FRAME, data: lastFrames });
+		frameMsgTime = Math.min(Date.now() - lastFrameMsgTimeStamp, 100);
+		sendPeers({ type: FRAME, refreshTime: frameMsgTime, data: lastFrames });
+		lastFrameMsgTimeStamp = Date.now();
 		lastFrames.length = 0;
 	}
 }, refreshRate);
