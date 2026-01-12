@@ -18,6 +18,8 @@ pnpm run dev
 - **Start and stop the engine**
 - **Adjust throttle**
 - **Calculate torque and power, see this [Observable Notebook](https://observablehq.com/d/b9e2604bfb070048)**
+- **Uses engine profile containing a 2d torque map (RPM vs Throttle Position) and a 2d AFR (Air-Fuel Ratio) map**
+- **Uses bilinear interpolation for torque and AFR values**
 - **Set RPM based on torque and dyno brake load**
 
 ---
@@ -47,6 +49,8 @@ Commands are sent using the `state` message type. The following properties are s
   }
 }
 ```
+
+> [!NOTE] the websocket servers and clients support partial updates, so you can send only the properties you want to change.
 
 ### Updates
 
